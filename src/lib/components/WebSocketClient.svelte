@@ -7,7 +7,15 @@
 
     onMount(() => {
         console.log('Establishing websocket connection');
-        socket = io('http://localhost:3000'); // Ensure this URL is correct
+        // This allows importing environment variables prefixed with VITE at runtime on the client side
+        const wsPort = import.meta.env.VITE_WS_PORT || 3001; // Fallback to 3001 if not set
+        const wsHost = window.location.hostname; // Get the current hostname
+
+        // Construct the WebSocket URL
+        const wsUrl = `${window.location.protocol}//${wsHost}:${wsPort}`;
+        console.log(`Attempting to establish websocket connection at ${wsUrl}`);
+
+        socket = io(wsUrl); 
 
         socket.on('connect', () => {
             console.log('Socket.IO connection established');

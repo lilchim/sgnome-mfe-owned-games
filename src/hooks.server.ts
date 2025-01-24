@@ -1,20 +1,31 @@
 import type { Handle } from '@sveltejs/kit';
 import { Server as HttpServer } from 'http';
 import io from './socket'; // Import the socket instance from src/socket.ts
+import 'dotenv/config';
 
 const httpServer = new HttpServer(); // Create an HTTP server
 
 // Use the existing io instance to attach to the HTTP server
+const origin = process.env.CORS_ORIGIN;
+console.log(`Configured Origin: ${origin}`);
+// const cors = {
+//     origin: process.env.CORS_ORIGIN || "http://localhost:5173", // Allow your Svelte app's origin
+//     methods: ["GET", "POST"],
+// };
+
+const cors = {
+    origin: '*', // Allow your Svelte app's origin
+    methods: ["GET", "POST"],
+};
+console.log(cors);
 io.attach(httpServer, {
-    cors: {
-        origin: "http://localhost:5173", // Allow your Svelte app's origin
-        methods: ["GET", "POST"],
-    },
+    cors
 });
 
+const wsport = process.env.VITE_WS_PORT ? Number(process.env.VITE_WS_PORT) : 3001;
 // Start the HTTP server to listen for connections
-httpServer.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+httpServer.listen(wsport, () => {
+    console.log(`Websocket Server is running on http://localhost:${wsport}`);
 });
 
 // Handle WebSocket upgrade requests
