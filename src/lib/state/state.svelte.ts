@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+
 interface OwnedGames {
     game_count: number;
     games: Game[];
@@ -17,7 +19,7 @@ interface Game {
     playtime_disconnected: number;
 }
 
-export const state = $state({
-    ownedGames: {} as OwnedGames,
-    loaded: false,
-})
+export const state = writable({
+    ownedGames: { games: [] },
+    loaded: false
+});
