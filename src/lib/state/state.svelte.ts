@@ -18,5 +18,6 @@ interface Game {
 }
 
 export const state = $state({
-    ownedGames: null
+    ownedGames: {} as OwnedGames,
+    loaded: false,
 })
